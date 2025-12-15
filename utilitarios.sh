@@ -24,7 +24,11 @@ read -p "Escolha uma opção: " opcao
 case $opcao in
 1)read -p "Qual o diretorio que deseja fazer backup (origem): " origem
 read -p "Qual o diretorio que deseja salvar o backup (destino)?: " destino
-rsync -av --delete "$origem" "$destino"
+origem="${origem/#\~/$HOME}"
+destino="${destino/#\~/$HOME}"
+origem_real=$(realpath -m "$origem")
+destino_real=$(realpath -m "$destino")
+rsync -av --delete "$origem_real" "$destino_real"
 if [ "$?" -eq 0 ]; then
 echo "Backup feito"
 else 
