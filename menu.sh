@@ -1,8 +1,13 @@
 #!/usr/bin/env bash 
-OPCAO=$(dialog --clear --menu "Script Multi-funções" 0 0 3 \
+dialog --clear --title "𝖀𝖙𝖎𝖑𝖎𝖙𝖆𝖗𝖎𝖔" --msgbox "$(cat ascii.txt)" 0 0
+
+clear
+
+OPCAO=$(dialog --clear --menu "Script Multi-funções" 0 0 5 \
 1 "Fazer Backup" \
 2 "Gravar Tela" \
 3 "Download Mp3" \
+4 "Cria Maquina Virtual" \
 3>&1 1>&2 2>&3)
 
 clear
