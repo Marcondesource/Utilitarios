@@ -24,11 +24,21 @@ esac
 
 case $OK in
 1)
-ORIGEM=$(dialog --clear --fselect / 0 0 3>&1 1>&2 2>&3) 
-DESTINO=$(dialog --clear --fselect / 0 0 3>&1 1>&2 2>&3)
+origem=$(dialog --clear --fselect / 0 0 3>&1 1>&2 2>&3) 
+destino=$(dialog --clear --fselect / 0 0 3>&1 1>&2 2>&3)
+origem="${origem/#\~/$HOME}"
+destino="${destino/#\~/$HOME}"
+origem_real=$(realpath -m "$origem")
+destino_real=$(realpath -m "$destino")
+rsync -av --delete "$origem_real" "$destino_real"
 ;;
 2)
-ORIGEM=$(dialog --clear --dselect / 0 0 3>&1 1>&2 2>&3)
-DESTINO=$(dialog --clear --dselect / 0 0 3>&1 1>&2 2>&3)
+origem=$(dialog --clear --dselect / 0 0 3>&1 1>&2 2>&3)
+destino=$(dialog --clear --dselect / 0 0 3>&1 1>&2 2>&3)
+origem="${origem/#\~/$HOME}"
+destino="${destino/#\~/$HOME}"
+origem_real=$(realpath -m "$origem")
+destino_real=$(realpath -m "$destino")
+rsync -av --delete "$origem_real" "$destino_real"
 ;;
 esac
