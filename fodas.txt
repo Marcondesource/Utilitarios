@@ -1,0 +1,41 @@
+#!/bin/bash
+
+# escolhe o monitor
+MONITOR=$(xrandr | awk '/ connected/ {print $1}' | \
+dialog --menu "Escolha o monitor:" 15 40 5 \
+$(xrandr | awk '/ connected/ {print $1 " " $1}') \
+2>&1 >/dev/tty)
+
+[[ -z "$MONITOR" ]] && exit 1
+
+# array vazio
+RESOLUCOES=()
+
+# extrai resoluções do monitor escolhido
+while read -r linha; do
+    if [[ $linha =~ ^[[:space:]]+([0-9]+x[0-9]+) ]]; then
+        res="${BASH_REMATCH[1]}"
+        status="off"
+        [[ $linha =~ \* ]] && status="on"
+        RESOLUCOES+=("$res" "" "$status")
+    fi
+done < <(xrandr | awk -v m="$MONITOR" '
+    $1 == m {flag=1; next}
+    flag && /^[[:space:]]+[0-9]/ {print}
+    flag && /^[A-Z]/ {exit}
+')
+
+# escolhe resolução
+ESCOLHA=$(dialog \
+    --title "Resolução para $MONITOR" \
+    --radiolist "Selecione a resolução:" \
+    15 50 8 \
+    "${RESOLUCOES[@]}" \
+    2>&1 >/dev/tty)
+
+clear
+
+[[ -z "$ESCOLHA" ]] && exit 1
+
+# aplica
+xrandr --output "$MONITOR" --mode "$ESCOLHA"
